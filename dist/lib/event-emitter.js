@@ -14,15 +14,17 @@ class EventEmitter {
     }
     unsubscribe(name, handler) {
         const fnName = utils_1.createName(name);
-        if (this.subjects[fnName]) {
-            this.subjects[fnName].unsubscribe(handler);
-            delete this.subjects[fnName];
-        }
+        this.subjects[fnName] ||
+            (this.subjects[fnName] = event_observer_1.EventObserverFactory.createEventObserver());
+        this.subjects[fnName].unsubscribe(handler);
+        delete this.subjects[fnName];
     }
-    unsubscribeAll(name = '') {
+    unsubscribeAll(name = "") {
         if (!name.length)
             this.subjects = {};
         const fnName = utils_1.createName(name);
+        this.subjects[fnName] ||
+            (this.subjects[fnName] = event_observer_1.EventObserverFactory.createEventObserver());
         this.subjects[fnName].unsubscribeAll();
     }
     emit(name, ...args) {
