@@ -1,8 +1,8 @@
 import { EventEmitter } from "./event-emitter";
 
 export class EventEmitterFactory {
-  static createEventEmitter(): EventEmitter {
-    const eventEmitter: EventEmitter = new EventEmitter();
+  static createEventEmitter(): EventEmitter<unknown> {
+    const eventEmitter: EventEmitter<unknown> = new EventEmitter();
     return eventEmitter;
   }
 }

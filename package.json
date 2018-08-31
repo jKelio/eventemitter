@@ -33,6 +33,6 @@
     "typescript": "^3.0.1"
   },
   "dependencies": {
-    "@jkelio/event-observer": "^1.0.1"
+    "@jkelio/event-observer": "^1.1.0"
   }
 }

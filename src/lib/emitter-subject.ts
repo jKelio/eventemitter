@@ -1,5 +1,5 @@
 import { EventObserver } from "@jkelio/event-observer";
 
-export interface EmitterSubject {
-    [event: string]: EventObserver
+export interface EmitterSubject<T> {
+    [event: string]: EventObserver<T>
 }
