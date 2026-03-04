@@ -2,11 +2,21 @@
   "name": "@jkelio/event-emitter",
   "version": "1.1.0",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/cjs/index.d.ts"
+    }
+  },
   "scripts": {
-    "build": "rm -rf dist && tsc",
-    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+    "build": "rm -rf dist && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
+    "test": "vitest run",
+    "lint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
+    "format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'"
   },
   "repository": {
     "type": "git",
@@ -25,12 +35,13 @@
   },
   "homepage": "https://github.com/jKelio/eventemitter#readme",
   "devDependencies": {
-    "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.5",
-    "chai": "^4.1.2",
-    "mocha": "^5.2.0",
-    "ts-node": "^7.0.1",
-    "typescript": "^3.0.1"
+    "vitest": "^1.6.0",
+    "typescript": "^5.4.0",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "prettier": "^3.2.0",
+    "eslint-config-prettier": "^9.1.0"
   },
   "dependencies": {
     "@jkelio/event-observer": "^1.1.0"
