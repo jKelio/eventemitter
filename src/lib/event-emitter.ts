@@ -1,6 +1,5 @@
-import { EventSubject } from "@jkelio/event-observer/dist/lib/event-subject";
 import { EmitterSubject } from "./emitter-subject";
-import { EventObserverFactory } from "@jkelio/event-observer";
+import { EventObserver, EventObserverFactory } from "@jkelio/event-observer";
 import { createName } from "./utils";
 
 export class EventEmitter<T> {
@@ -10,33 +9,30 @@ export class EventEmitter<T> {
     this.subjects = {};
   }
 
-  public subscribe(name: string, handler: T): void {
-    const fnName = createName(name);
+  private getOrCreate(fnName: string): EventObserver<T> {
     this.subjects[fnName] ||
-      (this.subjects[fnName] = EventObserverFactory.createEventObserver());
-    this.subjects[fnName].subscribe(handler);
+      (this.subjects[fnName] =
+        EventObserverFactory.createEventObserver() as EventObserver<T>);
+    return this.subjects[fnName];
+  }
+
+  public subscribe(name: string, handler: T): void {
+    this.getOrCreate(createName(name)).subscribe(handler);
   }
 
   public unsubscribe(name: string, handler: T): void {
     const fnName = createName(name);
-    this.subjects[fnName] ||
-      (this.subjects[fnName] = EventObserverFactory.createEventObserver());
-    this.subjects[fnName].unsubscribe(handler);
+    this.getOrCreate(fnName).unsubscribe(handler);
     delete this.subjects[fnName];
   }
 
   public unsubscribeAll(name: string = ""): void {
     if (!name.length) this.subjects = {};
-    const fnName = createName(name);
-    this.subjects[fnName] ||
-      (this.subjects[fnName] = EventObserverFactory.createEventObserver());
-    this.subjects[fnName].unsubscribeAll();
+    this.getOrCreate(createName(name)).unsubscribeAll();
   }
 
-  public emit(name: string, ...args: any[]): Promise<any> {
-    const fnName = createName(name);
-    this.subjects[fnName] ||
-      (this.subjects[fnName] = EventObserverFactory.createEventObserver());
-    return this.subjects[fnName].emit(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public emit(name: string, ...args: unknown[]): Promise<any> {
+    return this.getOrCreate(createName(name)).emit(...args);
   }
 }
